@@ -19,6 +19,8 @@ Build a backend that:
 
 Pragmatic hexagonal (ports and adapters) architecture:
 
+![Swagger UI - Band Details](images/exagonal.png)
+
 ```
 HTTP Request
     │
@@ -166,10 +168,6 @@ curl "http://localhost:8080/api/v1/bands?search=rock&sort=popularity&direction=d
 ```bash
 curl "http://localhost:8080/api/v1/bands/00000000-0000-0000-0000-000000000000"
 ```
-
-Example response via Swagger UI, using `Accept-Language: es`:
-
-![Swagger UI - Band Details](images/swagger-ui-band-details.png)
 
 ### Health check
 
