@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: isobar-fm-api
+  messages:
+    basename: messages
+    fallback-to-system-locale: false
+
+clients:
+  bands-api:
+    base-url: ${BANDS_API_BASE_URL:https://bands-api.vercel.app}
+    connect-timeout: ${BANDS_API_CONNECT_TIMEOUT:2s}
+    read-timeout: ${BANDS_API_READ_TIMEOUT:5s}
+
+app:
+  cache:
+    bands:
+      ttl: ${BANDS_CACHE_TTL:10m}
+      maximum-size: ${BANDS_CACHE_MAXIMUM_SIZE:10}
+  cors:
+    allowed-origins:
+      - ${CORS_ALLOWED_ORIGIN_1:http://localhost:3000}
+      - ${CORS_ALLOWED_ORIGIN_2:http://localhost:4200}
+      - ${CORS_ALLOWED_ORIGIN_3:http://localhost:5173}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
