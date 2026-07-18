@@ -103,6 +103,28 @@ docker run --rm -p 8080:8080 isobar-fm-api
 
 ---
 
+## Live Deployment
+
+A temporary live instance is deployed on **AWS Lambda**, running the same container image behind a public Function URL (no API Gateway needed):
+
+```
+https://zvlc5enqtu7lecxgwblhp3iqme0txsva.lambda-url.us-east-1.on.aws/
+```
+
+Try it directly:
+
+```bash
+curl "https://zvlc5enqtu7lecxgwblhp3iqme0txsva.lambda-url.us-east-1.on.aws/api/v1/bands"
+curl "https://zvlc5enqtu7lecxgwblhp3iqme0txsva.lambda-url.us-east-1.on.aws/actuator/health"
+```
+
+**Notes:**
+- The Spring Boot container runs via the [AWS Lambda Web Adapter](https://github.com/awslabs/aws-lambda-web-adapter) — no application code was changed to make this work.
+- The **first request may take a few seconds** (cold start: Lambda provisions the container and the JVM boots). Subsequent requests within the same warm window are fast.
+- This deployment is provisioned via Terraform (see `terraform/`) and is meant as a temporary demo for this recruitment process — it may be taken down after evaluation.
+
+---
+
 ## How to Test
 
 ```bash
@@ -143,10 +165,11 @@ curl "http://localhost:8080/api/v1/bands?search=rock&sort=popularity&direction=d
 
 ```bash
 curl "http://localhost:8080/api/v1/bands/00000000-0000-0000-0000-000000000000"
- 
-![Swagger UI - Band Details](images/Screenshot from 2026-07-18 16-08-28.png)
-
 ```
+
+Example response via Swagger UI, using `Accept-Language: es`:
+
+![Swagger UI - Band Details](images/swagger-ui-band-details.png)
 
 ### Health check
 
@@ -241,6 +264,7 @@ Stack traces are never exposed in responses. Provider internals never leak throu
 - **No authentication**: Out of scope. The API is designed to be placed behind an API gateway or load balancer that handles auth if needed.
 - **Album details not fetched**: No documented album-details endpoint exists on the provider. Only album IDs are returned.
 - **Spring HTTP Interface over RestTemplate**: Cleaner declarative style, type-safe, integrates naturally with RestClient. RestTemplate is deprecated in Spring 6.
+- **Lambda over App Runner for the live demo**: App Runner requires an explicit service subscription on the AWS account, which was not available in time. Lambda (via the Lambda Web Adapter) required no code changes and was faster to provision.
 
 ---
 
@@ -249,6 +273,7 @@ Stack traces are never exposed in responses. Provider internals never leak throu
 - The cache is per-instance. Horizontal scaling requires a shared cache (Redis) or cache invalidation strategy.
 - No retry policy on provider failure. A circuit breaker (Resilience4j) would improve fault tolerance under sustained provider outages.
 - i18n (Accept-Language) and CORS are stretch goals not yet implemented — error messages are in English only and CORS is not configured.
+- The live Lambda deployment has cold-start latency (a few seconds) on the first request after an idle period, due to JVM startup time.
 
 ---
 

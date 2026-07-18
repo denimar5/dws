@@ -3,17 +3,12 @@ output "ecr_repository_url" {
   value       = aws_ecr_repository.api.repository_url
 }
 
-output "app_runner_service_url" {
-  description = "URL pública do serviço no App Runner (HTTPS)"
-  value       = "https://${aws_apprunner_service.api.service_url}"
+output "lambda_function_name" {
+  description = "Nome da função Lambda"
+  value       = aws_lambda_function.api.function_name
 }
 
-output "app_runner_service_arn" {
-  description = "ARN do serviço App Runner"
-  value       = aws_apprunner_service.api.arn
-}
-
-output "app_runner_service_status" {
-  description = "Status atual do serviço App Runner"
-  value       = aws_apprunner_service.api.status
+output "lambda_function_url" {
+  description = "URL pública HTTPS do Lambda (Function URL)"
+  value       = aws_lambda_function_url.api.function_url
 }

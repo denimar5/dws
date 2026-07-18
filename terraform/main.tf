@@ -76,51 +76,5 @@ resource "aws_iam_role_policy_attachment" "apprunner_ecr_access" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSAppRunnerServicePolicyForECRAccess"
 }
 
-# ---------------------------------------------------------------------------
-# App Runner: serviço que roda o container publicamente
-# ---------------------------------------------------------------------------
-
-resource "aws_apprunner_service" "api" {
-  service_name = var.project_name
-
-  source_configuration {
-    auto_deployments_enabled = false
-
-    authentication_configuration {
-      access_role_arn = aws_iam_role.apprunner_ecr_access.arn
-    }
-
-    image_repository {
-      image_identifier      = "${aws_ecr_repository.api.repository_url}:${var.image_tag}"
-      image_repository_type = "ECR"
-
-      image_configuration {
-        port = tostring(var.port)
-
-        runtime_environment_variables = {
-          CORS_ALLOWED_ORIGIN_1 = var.cors_allowed_origin
-        }
-      }
-    }
-  }
-
-  instance_configuration {
-    cpu    = var.cpu
-    memory = var.memory
-  }
-
-  health_check_configuration {
-    protocol            = "HTTP"
-    path                = "/actuator/health"
-    interval            = 10
-    timeout             = 5
-    healthy_threshold   = 1
-    unhealthy_threshold = 3
-  }
-
-  tags = {
-    Project = var.project_name
-  }
-
-  depends_on = [aws_iam_role_policy_attachment.apprunner_ecr_access]
-}
+# Nota: App Runner exige assinatura ativa do serviço na conta root (ver DEPLOY.md).
+# Enquanto isso não é resolvido, o deploy foi migrado para AWS Lambda (ver lambda.tf).

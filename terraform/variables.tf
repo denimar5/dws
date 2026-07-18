@@ -39,3 +39,21 @@ variable "cors_allowed_origin" {
   type        = string
   default     = "http://localhost:3000"
 }
+
+variable "lambda_image_tag" {
+  description = "Tag da imagem Docker no ECR preparada com o Lambda Web Adapter"
+  type        = string
+  default     = "lambda"
+}
+
+variable "lambda_memory_size" {
+  description = "Memória em MB do Lambda (Spring Boot precisa de bastante margem — 3008 reduz o cold start drasticamente por dar mais CPU proporcional)"
+  type        = number
+  default     = 3008
+}
+
+variable "lambda_timeout" {
+  description = "Timeout em segundos do Lambda (margem de segurança para o cold start do Spring Boot)"
+  type        = number
+  default     = 60
+}
