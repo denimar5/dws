@@ -143,7 +143,8 @@ curl "http://localhost:8080/api/v1/bands?search=rock&sort=popularity&direction=d
 
 ```bash
 curl "http://localhost:8080/api/v1/bands/00000000-0000-0000-0000-000000000000"
-<img width="1340" height="697" alt="image" src="https://github.com/user-attachments/assets/e77e1580-9d8c-4176-9046-bb01c6c8231f" />
+ 
+![Swagger UI - Band Details](images/Screenshot from 2026-07-18 16-08-28.png)
 
 ```
 
